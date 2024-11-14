@@ -1,0 +1,106 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+//change scene
+public class MainMenu : MonoBehaviour
+{
+    public void StartMenu()
+    {
+        SceneManager.LoadSceneAsync("StartMenu");
+    }
+
+    public void Module()
+    {
+        SceneManager.LoadSceneAsync("Module");
+    }
+	public void Vid()
+    {
+        SceneManager.LoadSceneAsync("Vid");
+    }
+}
+
+//button sound
+public class sfxManager : MonoBehaviour
+{
+    public AudioClip buttonClickSound;
+    private AudioSource audioSource;
+    private static bool soundMuted;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void PlayButtonClickSound()
+    {
+        if (!soundMuted)
+        {
+            audioSource.PlayOneShot(buttonClickSound);
+        }
+    }
+
+    public void ToggleMute()
+    {
+        soundMuted = !soundMuted;
+    }
+}
+
+//bgm
+public class MusicManager : MonoBehaviour
+{
+    public static MusicManager Instance { get; private set; }
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        // Singleton pattern to ensure only one instance of MusicManager exists
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    public void ToggleMusic()
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Pause(); // Pause music
+        }
+        else
+        {
+            audioSource.Play(); // Resume music
+        }
+    }
+
+    public bool IsMusicPlaying()
+    {
+        return audioSource.isPlaying;
+    }
+}
+
+//quitgame
+public class Exitapplication : MonoBehaviour
+{
+    // This method will be called when the Exit button is clicked
+    public void Exit()
+    {
+	PlayerPrefs.DeleteAll();
+        // If we are running the game in the Unity editor, we stop play mode
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // If we are running the game as a standalone application, we quit the game
+        Application.Quit();
+#endif
+    }
+}
