@@ -49,44 +49,23 @@ public class sfxManager : MonoBehaviour
 }
 
 //bgm
-public class MusicManager : MonoBehaviour
-{
-    public static MusicManager Instance { get; private set; }
-    private AudioSource audioSource;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-    private void Awake()
-    {
-        // Singleton pattern to ensure only one instance of MusicManager exists
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+public class BGmusic : MonoBehaviour{
+        private static BGmusic bgMusic;
+void Awake(){
+	if(bgMusic == null){
+		bgMusic=this;
 
-        audioSource = GetComponent<AudioSource>();
-    }
-
-    public void ToggleMusic()
-    {
-        if (audioSource.isPlaying)
-        {
-            audioSource.Pause(); // Pause music
-        }
-        else
-        {
-            audioSource.Play(); // Resume music
-        }
-    }
-
-    public bool IsMusicPlaying()
-    {
-        return audioSource.isPlaying;
-    }
+DontDestroyOnLoad(bgMusic);
+}else{
+	Destroy(gameObject);
+	}      
+   }
 }
+
 
 //quitgame
 public class Exitapplication : MonoBehaviour
@@ -94,8 +73,6 @@ public class Exitapplication : MonoBehaviour
     // This method will be called when the Exit button is clicked
     public void Exit()
     {
-	PlayerPrefs.DeleteAll();
-        // If we are running the game in the Unity editor, we stop play mode
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
